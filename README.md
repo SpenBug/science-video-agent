@@ -38,6 +38,10 @@ npm run fetch-runtime   # 下载便携 ffmpeg + Node 到 resources/runtime（构
 npm run dist         # 打 Windows 安装包（NSIS）+ 便携版 → dist/
 ```
 
+> 国内网络说明：`npm run dist` 会自动把 electron-builder 的二进制镜像指向
+> `registry.npmmirror.com`（winCodeSign / nsis 托管在 GitHub，直连常超时）；
+> 如需自定义，设 `ELECTRON_BUILDER_BINARIES_MIRROR` 即可，脚本不会覆盖显式设置。
+
 冒烟测试覆盖：技能库只读沙箱、路径越界拦截、7 个工具的执行与退出码判定、系统提示词门禁完整性、工具链探测。
 
 ## 环境要求
