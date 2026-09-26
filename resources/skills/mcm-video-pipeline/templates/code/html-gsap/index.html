@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1920, height=1080" />
+  <title>{{EPISODE_TITLE}}</title>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <style>
+    /* ── 本地中文字体（解决乱码） ── */
+    @font-face {
+      font-family: "Noto Sans SC";
+      src: url("fonts/noto-sc-400.woff2") format("woff2");
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "Noto Sans SC";
+      src: url("fonts/noto-sc-700.woff2") format("woff2");
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: #0D1B2A;
+      font-family: "Noto Sans SC", sans-serif;
+    }
+
+    /* ── 场景基类 ── */
+    .scene {
+      position: absolute;
+      top: 0; left: 0;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+    }
+    /* 场景靠 z-index 递增 + opacity 切换；改场景数时这段要跟着加 */
+    #scene1 { z-index: 1;  background: #0D1B2A; }
+    #scene2 { z-index: 2;  background: #0D1B2A; opacity: 0; }
+    #scene3 { z-index: 3;  background: #0D1B2A; opacity: 0; }
+
+    /* ── 配色 token ── */
+    :root {
+      --bg:       #0D1B2A;
+      --bg-card:  #1B2A3E;
+      --accent:   #F77F00;
+      --red:      #E63946;
+      --green:    #2A9D8F;
+      --yellow:   #FCBF49;
+      --text:     #E0E1DD;
+      --text-dim: #8D99AE;
+    }
+
+    /* ── S1 钩子 ── */
+    .hook-content {
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      width: 100%; height: 100%; padding: 80px 120px; gap: 26px;
+    }
+    .hook-label { font-size: 34px; color: var(--text-dim); letter-spacing: 4px; }
+    .hook-number { font-size: 210px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; line-height: 1; }
+    .hook-pct { font-size: 120px; font-weight: 700; color: var(--red); font-variant-numeric: tabular-nums; }
+    .hook-sub { font-size: 40px; color: var(--text); max-width: 1100px; text-align: center; line-height: 1.5; }
+    .hook-accent-bar { width: 80px; height: 6px; background: var(--accent); border-radius: 3px; }
+
+    /* ── 坑场景（对比版式，S2 起复用） ── */
+    .pitfall-content {
+      display: flex; flex-direction: column; justify-content: center;
+      width: 100%; height: 100%; padding: 55px 100px; gap: 32px;
+    }
+    .pitfall-header { display: flex; align-items: center; gap: 22px; }
+    .pitfall-num { font-size: 66px; font-weight: 700; color: var(--accent); }
+    .pitfall-title { font-size: 56px; font-weight: 700; color: var(--text); }
+    .compare-row { display: flex; gap: 30px; flex: 1; }
+    .compare-card { flex: 1; background: var(--bg-card); border-radius: 20px; padding: 36px 40px; display: flex; flex-direction: column; gap: 18px; border: 2px solid transparent; }
+    .compare-card.bad  { border-color: rgba(230,57,70,0.35); }
+    .compare-card.good { border-color: rgba(42,157,143,0.35); }
+    .card-label { font-size: 26px; font-weight: 700; letter-spacing: 2px; }
+    .card-label.bad  { color: var(--red); }
+    .card-label.good { color: var(--green); }
+    .card-text { font-size: 30px; color: var(--text); line-height: 1.7; flex: 1; }
+    .card-text .hl { color: var(--yellow); font-weight: 700; }
+    .tip-bar { background: rgba(247,127,0,0.12); border-left: 6px solid var(--accent); border-radius: 8px; padding: 18px 30px; font-size: 28px; color: var(--accent); font-weight: 700; }
+
+    /* ── S3 Outro ── */
+    .outro-content {
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      width: 100%; height: 100%; padding: 80px 120px; gap: 34px;
+    }
+    .outro-title { font-size: 76px; font-weight: 700; color: var(--text); }
+    .outro-sub { font-size: 38px; color: var(--text-dim); }
+    .outro-cta { font-size: 34px; color: var(--accent); font-weight: 700; }
+  </style>
+</head>
+<body>
+  <!--
+    root 是 HyperFrames 的合成根：data-composition-id 必须与
+    脚本里 window.__timelines["<id>"] 的 key 一致。
+    data-duration 是整个片子的长度，改片长只改这一处。
+  -->
+  <div
+    id="root"
+    data-composition-id="main"
+    data-width="1920"
+    data-height="1080"
+    data-start="0"
+    data-duration="{{TOTAL_SEC}}"
+  >
+    <!-- ══════ S1 钩子 ({{S1_WINDOW}}s) ══════ -->
+    <div id="scene1" class="scene" data-layout-allow-overflow data-layout-allow-overlap>
+      <div class="hook-content" data-layout-allow-overflow>
+        <div class="hook-accent-bar" id="s1-bar"></div>
+        <div class="hook-label" id="s1-label">{{S1_KICKER}}</div>
+        <div class="hook-number" id="s1-num">{{S1_BIG_NUMBER}}</div>
+        <div class="hook-label" id="s1-label2">{{S1_KICKER2}}</div>
+        <div class="hook-pct" id="s1-pct">{{S1_BIG_PCT}}</div>
+        <div class="hook-sub" id="s1-sub">{{S1_SUB}}</div>
+      </div>
+    </div>
+
+    <!-- ══════ S2 对比场景 ({{S2_WINDOW}}s) ══════ -->
+    <div id="scene2" class="scene" data-layout-allow-overflow data-layout-allow-overlap>
+      <div class="pitfall-content" data-layout-allow-overflow>
+        <div class="pitfall-header">
+          <div class="pitfall-num" id="s2-num">{{S2_NUM}}</div>
+          <div class="pitfall-title" id="s2-title">{{S2_TITLE}}</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-card bad" id="s2-card-bad">
+            <div class="card-label bad" id="s2-label-bad">错误示范</div>
+            <div class="card-text" id="s2-text-bad">{{S2_BAD}}</div>
+          </div>
+          <div class="compare-card good" id="s2-card-good">
+            <div class="card-label good" id="s2-label-good">正确姿势</div>
+            <div class="card-text" id="s2-text-good">{{S2_GOOD}}</div>
+          </div>
+        </div>
+        <div class="tip-bar" id="s2-tip">{{S2_TIP}}</div>
+      </div>
+    </div>
+
+    <!-- ══════ S3 Outro ({{S3_WINDOW}}s) ══════ -->
+    <div id="scene3" class="scene" data-layout-allow-overflow data-layout-allow-overlap>
+      <div class="outro-content" data-layout-allow-overflow>
+        <div class="outro-title" id="s3-title">{{S3_TITLE}}</div>
+        <div class="outro-sub" id="s3-sub">{{S3_SUB}}</div>
+        <div class="outro-cta" id="s3-cta">{{S3_CTA}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!--
+    ══════ BGM + 配音 ══════
+    规则：BGM 固定 track 1；配音 track 2..N+1 各占一条独立轨道。
+    data-start   = 场景展示开始 + 0.3s（与 TIMELINE.md「口播实际区间」对齐）
+    data-duration = audio/sN.wav 的实测时长，必须回填真实值
+    audio 必须带 id，否则渲染静音
+  -->
+  <audio id="bgm" data-start="0"    data-duration="{{TOTAL_SEC}}" data-track-index="1"  src="bgm.mp3"      data-volume="0.18"></audio>
+  <audio id="a1"  data-start="{{A1_START}}" data-duration="{{A1_DUR}}" data-track-index="2" src="audio/s1.wav" data-volume="1"></audio>
+  <audio id="a2"  data-start="{{A2_START}}" data-duration="{{A2_DUR}}" data-track-index="3" src="audio/s2.wav" data-volume="1"></audio>
+  <audio id="a3"  data-start="{{A3_START}}" data-duration="{{A3_DUR}}" data-track-index="4" src="audio/s3.wav" data-volume="1"></audio>
+
+  <script>
+    window.__timelines = window.__timelines || {};
+    var tl = gsap.timeline({ paused: true });
+
+    /*
+      全片一律用「绝对秒」定位：tl.from(el, {...}, T) 的第 3 个参数是片子开始
+      到该动画起点的秒数，直接照 TIMELINE.md 的配音区间填，不做相对累加。
+      换期时改这里的秒数，同时改 TIMELINE.md，两处必须一致。
+    */
+
+    /* ═══════ S1 钩子 ({{S1_WINDOW}}s) ═══════ */
+    tl.from("#s1-bar",    { scaleX: 0, duration: 0.5, ease: "power2.out" },    0.3);
+    tl.from("#s1-label",  { y: 30, opacity: 0, duration: 0.5, ease: "power2.out" }, 0.6);
+    tl.from("#s1-num",    { scale: 0.5, opacity: 0, duration: 0.7, ease: "back.out(1.4)" }, 1.6);
+    tl.from("#s1-label2", { y: 20, opacity: 0, duration: 0.4, ease: "power2.out" }, 4.2);
+    tl.from("#s1-pct",    { scale: 0.3, opacity: 0, duration: 0.6, ease: "back.out(2)" }, 5.8);
+    tl.from("#s1-sub",    { y: 25, opacity: 0, duration: 0.5, ease: "power3.out" }, 8.0);
+    // S1 常驻呼吸动画
+    tl.to("#s1-num", { scale: 1.04, duration: 1.5, yoyo: true, repeat: 6, ease: "sine.inOut" }, 9.0);
+    // S1→S2 push（{{S1_END}}s）
+    tl.to("#scene1", { x: -1920, duration: 0.6, ease: "power3.inOut" }, {{S1_END}});
+    tl.fromTo("#scene2", { x: 1920, opacity: 1 }, { x: 0, opacity: 1, duration: 0.6, ease: "power3.inOut" }, {{S1_END}});
+
+    /* ═══════ S2 对比场景 ({{S2_WINDOW}}s, 配音 {{A2_DUR}}s) ═══════ */
+    tl.from("#s2-num",   { x: -40, opacity: 0, duration: 0.4, ease: "expo.out" }, {{S2_START}});
+    tl.from("#s2-title", { x: -30, opacity: 0, duration: 0.4, ease: "expo.out" }, {{S2_TITLE_T}});
+    tl.from("#s2-card-bad", { x: -60, opacity: 0, duration: 0.5, ease: "power3.out" }, {{S2_CARD_T}});
+    tl.from("#s2-label-bad", { y: -15, opacity: 0, duration: 0.3, ease: "power2.out" }, {{S2_LABEL_T}});
+    tl.from("#s2-text-bad",  { y: 20, opacity: 0, duration: 0.4, ease: "power2.out" }, {{S2_TEXT_T}});
+    tl.from("#s2-card-good", { x: 60, opacity: 0, duration: 0.5, ease: "power3.out" }, {{S2_GOOD_T}});
+    tl.from("#s2-label-good", { y: -15, opacity: 0, duration: 0.3, ease: "power2.out" }, {{S2_GLABEL_T}});
+    tl.from("#s2-text-good",  { y: 20, opacity: 0, duration: 0.4, ease: "power2.out" }, {{S2_GTEXT_T}});
+    tl.from("#s2-tip", { y: 30, opacity: 0, duration: 0.4, ease: "back.out(1.2)" }, {{S2_TIP_T}});
+    // S2 常驻浮动
+    tl.to("#s2-card-good", { y: -8, duration: 1.6, yoyo: true, repeat: 8, ease: "sine.inOut" }, {{S2_FLOAT_T}});
+    // S2→S3 blur（{{S2_END}}s）
+    tl.to("#scene2", { filter: "blur(12px)", scale: 1.03, opacity: 0, duration: 0.6, ease: "power2.inOut" }, {{S2_END}});
+    tl.fromTo("#scene3", { filter: "blur(12px)", scale: 0.97, opacity: 0 }, { filter: "blur(0px)", scale: 1, opacity: 1, duration: 0.6, ease: "power2.inOut" }, {{S2_END}});
+
+    /* ═══════ S3 Outro ({{S3_WINDOW}}s, 配音 {{A3_DUR}}s) ═══════ */
+    tl.from("#s3-title", { y: 40, opacity: 0, duration: 0.5, ease: "power3.out" }, {{S3_START}});
+    tl.from("#s3-sub",   { y: 30, opacity: 0, duration: 0.5, ease: "power3.out" }, {{S3_SUB_T}});
+    tl.from("#s3-cta",   { y: 30, opacity: 0, duration: 0.6, ease: "back.out(1.2)" }, {{S3_CTA_T}});
+    tl.to("#s3-title", { scale: 1.02, duration: 1.5, yoyo: true, repeat: 5, ease: "sine.inOut" }, {{S3_FLOAT_T}});
+    // 结尾淡出
+    tl.to("#scene3", { opacity: 0, duration: 0.8, ease: "power2.inOut" }, {{S3_FADE}});
+
+    window.__timelines["main"] = tl;
+  </script>
+</body>
+</html>

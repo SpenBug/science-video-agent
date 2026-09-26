@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  /* 封面单独渲染，字体路径按实际取图方式写：相对路径（本地双击）
+     或 http://localhost:PORT/<项目名>/fonts/...（走本地服务截图） */
+  @font-face { font-family:"Noto SC"; src:url("fonts/noto-sc-400.woff2") format("woff2"); font-weight:400; }
+  @font-face { font-family:"Noto SC"; src:url("fonts/noto-sc-700.woff2") format("woff2"); font-weight:700; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1200px; height:900px; overflow:hidden; font-family:"Noto SC",sans-serif; background:#0D1B2A; }
+  /* 玻璃拟态：inset 内缩 + 半透明卡片 + 大阴影，压在渐变背景上 */
+  .cover { width:1200px; height:900px; position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:
+      radial-gradient(ellipse 60% 40% at 80% 15%, rgba(247,127,0,.14), transparent 60%),
+      radial-gradient(ellipse 50% 45% at 15% 85%, rgba(42,157,143,.12), transparent 60%),
+      linear-gradient(160deg,#0D1B2A 0%, #13283F 55%, #0D1B2A 100%);
+  }
+  .glass { position:absolute; inset:34px; border-radius:28px; border:1px solid rgba(255,255,255,.08);
+    background:rgba(27,42,62,.45); box-shadow:0 20px 60px rgba(0,0,0,.5); }
+  .tag { position:absolute; top:64px; font-size:26px; letter-spacing:6px; color:#FCBF49; font-weight:700; }
+  .tag2 { position:absolute; top:112px; font-size:20px; letter-spacing:3px; color:#8D99AE; }
+  .num { position:absolute; top:200px; font-size:210px; font-weight:700; color:#E0E1DD; letter-spacing:2px; line-height:1; font-variant-numeric:tabular-nums; }
+  .pct { position:absolute; top:430px; font-size:120px; font-weight:700; color:#E63946; font-variant-numeric:tabular-nums; }
+  .sub { position:absolute; top:590px; font-size:38px; color:#E0E1DD; font-weight:700; }
+  .badge { position:absolute; top:688px; font-size:24px; color:#2A9D8F; border:2px solid #2A9D8F; padding:8px 26px; border-radius:40px; letter-spacing:2px; }
+  .bar { position:absolute; top:172px; width:80px; height:6px; background:#F77F00; border-radius:3px; }
+</style>
+</head>
+<body>
+  <div class="cover">
+    <div class="glass"></div>
+    <div class="tag">{{SERIES_TAG}}</div>
+    <div class="tag2">{{KICKER}}</div>
+    <div class="bar"></div>
+    <div class="num">{{BIG_NUMBER}}</div>
+    <div class="pct">{{BIG_PCT}}</div>
+    <div class="sub">{{SUB_LINE}}</div>
+    <div class="badge">{{BADGE}}</div>
+  </div>
+</body>
+</html>
