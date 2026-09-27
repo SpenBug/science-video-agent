@@ -8,6 +8,7 @@
   const state = {
     config: null,
     providers: [],
+    packs: [],
     skillsRoot: '',
     workspace: '',
     messages: [],      // OpenAI 格式历史
@@ -20,6 +21,21 @@
     reasoningBuffer: '',
     lastPreview: '',
   };
+
+  /* ================= 领域包选择 ================= */
+
+  function renderDomainSel() {
+    const sel = $('domainSel');
+    if (!sel) return;
+    const active = state.config?.domainPack || 'mcm-video-pipeline';
+    sel.innerHTML = (state.packs || [])
+      .map(
+        (p) =>
+          `<option value="${esc(p.id)}"${p.id === active ? ' selected' : ''}>${esc(p.name)}${p.domain && p.domain !== p.name ? `（${esc(p.domain)}）` : ''}</option>`
+      )
+      .join('');
+    sel.classList.toggle('hidden', !(state.packs || []).length);
+  }
 
   /* ================= 工具函数 ================= */
 
@@ -281,11 +297,12 @@
     div.className = 'empty-state';
     div.innerHTML = `
       <div class="empty-logo">▶</div>
-      <h2>数模视频工厂</h2>
-      <p>13 步流程 · 11 套模板 · 强制确认门 · 可自填 API 与模型</p>
+      <h2>知识视频工厂</h2>
+      <p>13 步流程 · 领域包 · 11 套模板 · 强制确认门 · 可自填 API 与模型</p>
       <div class="quick-cards" id="quickCards"></div>`;
     const cards = [
-      { t: '出一期视频', d: '从选题到成品 mp4，走完整 13 步（含蓝图确认与后处理两关）' },
+      { t: '出一期数模视频', d: '做一期 185 秒的数模避坑指南，5 个坑并列清单，走完整 13 步出横版 mp4' },
+      { t: '出一期通用科普', d: '做一期 3 分钟的知识科普视频（领域不限，主题听你安排或我给你），走完整 13 步出横版 mp4' },
       { t: 'N 条清单快出', d: '并列清单内容用大字清单档，110–120 秒短平快' },
       { t: '只跑配音+时间轴', d: '稿子已有，跑 TTS、混音并回写 timing.json' },
       { t: '检查成品规格', d: '用 ffmpeg 探测 mp4，看是不是 yuv420p(tv, bt709)' },
@@ -1028,8 +1045,15 @@
     const info = await api.config.get();
     state.config = info.config;
     state.providers = info.providers || [];
+    state.packs = info.packs || [];
     state.skillsRoot = info.skillsRoot || '';
     state.workspace = await api.workspace.ensure();
+
+    renderDomainSel();
+    $('domainSel').addEventListener('change', async () => {
+      state.config = await api.config.save({ domainPack: $('domainSel').value });
+      renderDomainSel();
+    });
 
     updateHeader();
     newSession();

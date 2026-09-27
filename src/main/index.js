@@ -25,7 +25,7 @@ function createWindow() {
     height: 940,
     minWidth: 1120,
     minHeight: 700,
-    title: '数模视频工厂',
+    title: '知识视频工厂',
     backgroundColor: '#0D1B2A',
     autoHideMenuBar: true,
     show: false,

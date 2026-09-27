@@ -24,6 +24,8 @@ const DEFAULT_CONFIG = {
   temperature: 0.3,
   maxTokens: 8192,
   workspace: '',
+  /** 领域包：决定 Agent 走哪套流程规范 / 模板 / 合规红线（resources/skills/<domainPack>） */
+  domainPack: 'mcm-video-pipeline',
   autoApprove: true,
   maxIterations: 80,
   pythonPath: '',

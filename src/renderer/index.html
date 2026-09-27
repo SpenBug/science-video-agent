@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="Content-Security-Policy"
         content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file:; font-src 'self' data:;" />
-  <title>数模视频工厂</title>
+  <title>知识视频工厂</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -14,11 +14,12 @@
       <div class="brand">
         <span class="logo">▶</span>
         <div class="brand-text">
-          <h1>数模视频工厂</h1>
+          <h1>知识视频工厂</h1>
           <p class="sub" id="wsPath" title="当前工作区">未设置工作区</p>
         </div>
       </div>
       <div class="topbar-actions">
+        <select id="domainSel" class="domain-sel" title="领域包：决定流程规范、模板与合规红线"></select>
         <span class="badge" id="modelBadge">未配置模型</span>
         <button id="btnWorkspace" class="btn ghost">工作区</button>
         <button id="btnEnv" class="btn ghost">运行环境</button>

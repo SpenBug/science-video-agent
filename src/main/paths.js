@@ -71,9 +71,9 @@ function prependRuntimeToPath() {
   return present;
 }
 
-/** 默认工作区：文档/数模视频工厂工作区 */
+/** 默认工作区：文档/知识视频工厂工作区 */
 function getDefaultWorkspace() {
-  return path.join(app.getPath('documents'), '数模视频工厂工作区');
+  return path.join(app.getPath('documents'), '知识视频工厂工作区');
 }
 
 function isDev() {

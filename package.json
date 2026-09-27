@@ -1,8 +1,8 @@
 {
   "name": "mcm-video-agent",
   "productName": "数模视频工厂",
-  "version": "1.0.0",
-  "description": "数模自媒体视频生产线：13 步流程 + 11 套模板 + 强制确认门，支持自填 API 与自选模型",
+  "version": "1.1.0",
+  "description": "知识科普视频生产线桌面端：13 步流程 + 领域包（数模/通用科普）+ 11 套模板 + 强制确认门，支持自填 API 与自选模型",
   "main": "src/main/index.js",
   "author": {
     "name": "SpenBug"
@@ -25,7 +25,7 @@
   },
   "build": {
     "appId": "com.spenbug.mcm-video-agent",
-    "productName": "数模视频工厂",
+    "productName": "知识视频工厂",
     "directories": {
       "output": "dist",
       "buildResources": "build"
@@ -68,10 +68,10 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "数模视频工厂"
+      "shortcutName": "知识视频工厂"
     },
     "portable": {
-      "artifactName": "数模视频工厂-便携版-${version}.exe"
+      "artifactName": "知识视频工厂-便携版-${version}.exe"
     }
   }
 }

@@ -39,15 +39,41 @@ function registerIpc(getWindow) {
 
   /* ---------------- 配置 ---------------- */
 
+  /** 枚举技能库里的领域包（pack.json 元数据，缺省回退 SKILL.md / 目录名） */
+  function listDomainPacks() {
+    const root = getSkillsRoot();
+    const out = [];
+    if (!fs.existsSync(root)) return out;
+    for (const d of fs.readdirSync(root, { withFileTypes: true })) {
+      if (!d.isDirectory()) continue;
+      const dir = path.join(root, d.name);
+      if (!fs.existsSync(path.join(dir, 'SKILL.md'))) continue;
+      let pack = { id: d.name, name: d.name, domain: '', description: '' };
+      try {
+        const pj = JSON.parse(fs.readFileSync(path.join(dir, 'pack.json'), 'utf8'));
+        pack = { ...pack, ...pj, id: pj.id || d.name };
+      } catch {
+        /* 无 pack.json 也能用，只是展示信息少 */
+      }
+      out.push(pack);
+    }
+    return out;
+  }
+
   ipcMain.handle('config:get', () => ({
     config: publicConfig(),
     providers: PROVIDERS,
     skillsRoot: getSkillsRoot(),
+    packs: listDomainPacks(),
   }));
 
   ipcMain.handle('config:save', (_e, patch) => {
     const clean = { ...patch };
     if (clean.apiKey === undefined || clean.apiKey === '') delete clean.apiKey;
+    if (clean.domainPack != null) {
+      const known = listDomainPacks().map((p) => p.id);
+      if (!known.includes(clean.domainPack)) delete clean.domainPack;
+    }
     writeConfig(clean);
     return publicConfig();
   });
