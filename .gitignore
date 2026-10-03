@@ -1,0 +1,22 @@
+# 依赖
+node_modules/
+
+# 构建产物
+dist/
+
+# 便携运行时（构建期由 npm run fetch-runtime 下载，不入库）
+resources/runtime/
+
+# 运行时测试痕迹
+.selftest/
+*.log
+
+# 会话与本地状态（正常在 userData，防误放）
+.mcm-video-agent/
+
+# 系统 / 编辑器
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

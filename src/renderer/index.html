@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file:; font-src 'self' data:;" />
+  <title>知识视频工厂</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- 顶栏 -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo">▶</span>
+        <div class="brand-text">
+          <h1>知识视频工厂</h1>
+          <p class="sub" id="wsPath" title="当前工作区">未设置工作区</p>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <select id="domainSel" class="domain-sel" title="领域包：决定流程规范、模板与合规红线"></select>
+        <span class="badge" id="modelBadge">未配置模型</span>
+        <button id="btnWorkspace" class="btn ghost">工作区</button>
+        <button id="btnEnv" class="btn ghost">运行环境</button>
+        <button id="btnSettings" class="btn primary">设置</button>
+      </div>
+    </header>
+
+    <!-- 左侧栏 -->
+    <aside class="sidebar">
+      <section class="side-block">
+        <div class="side-head">
+          <span>会话</span>
+          <button id="btnNewSession" class="icon-btn" title="新建会话">＋</button>
+        </div>
+        <ul id="sessionList" class="session-list"></ul>
+      </section>
+      <section class="side-block grow">
+        <div class="side-head">
+          <span>工作区文件</span>
+          <button id="btnRefreshFiles" class="icon-btn" title="刷新">⟳</button>
+        </div>
+        <ul id="fileTree" class="file-tree"></ul>
+      </section>
+    </aside>
+
+    <!-- 对话主区 -->
+    <main class="chat">
+      <div id="messages" class="messages">
+        <div class="empty-state" id="emptyState">
+          <div class="empty-logo">▶</div>
+          <h2>数模视频工厂</h2>
+          <p>13 步流程 · 11 套模板 · 强制确认门 · 可自填 API 与模型</p>
+          <div class="quick-cards" id="quickCards"></div>
+        </div>
+      </div>
+
+      <div class="composer">
+        <textarea id="input" rows="3"
+          placeholder="描述这一期要做什么，例如：做一期 185 秒的国赛避坑指南，5 个坑并列清单，走完整 13 步出横版 mp4"></textarea>
+        <div class="composer-bar">
+          <span class="hint" id="statusHint"></span>
+          <div class="composer-btns">
+            <button id="btnStop" class="btn danger hidden">停止</button>
+            <button id="btnSend" class="btn primary">发送</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 右侧预览 -->
+    <aside class="preview hidden" id="previewPane">
+      <div class="preview-head">
+        <span id="previewTitle">预览</span>
+        <div>
+          <button id="btnPreviewOpen" class="icon-btn" title="用系统程序打开">↗</button>
+          <button id="btnPreviewClose" class="icon-btn" title="关闭">✕</button>
+        </div>
+      </div>
+      <div class="preview-body" id="previewBody"></div>
+    </aside>
+  </div>
+
+  <!-- 设置抽屉 -->
+  <div class="mask hidden" id="mask"></div>
+  <aside class="drawer hidden" id="drawer">
+    <div class="drawer-head">
+      <h2 id="drawerTitle">设置</h2>
+      <button class="icon-btn" id="btnDrawerClose">✕</button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+  </aside>
+
+  <!-- 首次启动环境向导 -->
+  <div class="onboard hidden" id="onboard">
+    <div class="onboard-card">
+      <div class="onboard-head">
+        <div class="onboard-logo">▶</div>
+        <div>
+          <h2>欢迎使用数模视频工厂</h2>
+          <p>首次使用，先做一次环境体检 —— 缺什么补什么，全程自动</p>
+        </div>
+      </div>
+      <div id="onboardItems" class="onboard-items"></div>
+      <div class="onboard-log hidden" id="onboardLog"></div>
+      <div class="onboard-actions">
+        <button id="btnOnboardSkip" class="btn ghost">暂不，直接进入</button>
+        <button id="btnOnboardDone" class="btn primary" disabled>开始使用</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

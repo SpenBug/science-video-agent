@@ -1,0 +1,77 @@
+{
+  "name": "mcm-video-agent",
+  "productName": "数模视频工厂",
+  "version": "1.1.0",
+  "description": "知识科普视频生产线桌面端：13 步流程 + 领域包（数模/通用科普）+ 11 套模板 + 强制确认门，支持自填 API 与自选模型",
+  "main": "src/main/index.js",
+  "author": {
+    "name": "SpenBug"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SpenBug/mcm-video-agent"
+  },
+  "private": false,
+  "scripts": {
+    "fetch-runtime": "node scripts/fetch-runtime.js",
+    "start": "node scripts/dev.js",
+    "start:nogpu": "node scripts/dev.js --no-gpu",
+    "smoke": "node scripts/dev.js --smoke --no-gpu",
+    "test:loop": "node scripts/test-agent-loop.js",
+    "test:tools": "node scripts/test-tools.js",
+    "pack": "npm run fetch-runtime && node scripts/build.js --dir",
+    "dist": "npm run fetch-runtime && node scripts/build.js"
+  },
+  "build": {
+    "appId": "com.spenbug.mcm-video-agent",
+    "productName": "知识视频工厂",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "package.json",
+      "!**/*.map"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/skills",
+        "to": "skills"
+      },
+      {
+        "from": "resources/runtime",
+        "to": "runtime"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "知识视频工厂"
+    },
+    "portable": {
+      "artifactName": "知识视频工厂-便携版-${version}.exe"
+    }
+  }
+}
